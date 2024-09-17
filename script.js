@@ -110,4 +110,6 @@ window.onload = function() {
 
     // Call displayClock to show the clock at intervals
     setInterval(displayClock, 1000);
+    document.getElementById("year").innerHTML = new Date().getFullYear();
+
 };
