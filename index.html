@@ -5,20 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Heures de Prière</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="container">
-        <div id="clock" class="center"></div> <!-- Horloge centrale -->
-        <div id="prayer-times" class="prayer-container">
-            <p>Fajr: <span id="fajr"></span></p>
-            <p>Dhuhr: <span id="dhuhr"></span></p>
-            <p>Asr: <span id="asr"></span></p>
-            <p>Maghrib: <span id="maghrib"></span></p>
-            <p>Isha: <span id="isha"></span></p>
+    <header>
+        <h1>Prayer Times - Heures de Prière</h1>
+        <p>Your daily guide to prayer times based on your location.</p>
+    </header>
+
+    <div id="clock" class="center"></div> <!-- Horloge -->
+
+    <div id="prayer-times" class="prayer-grid">
+        <div>
+            <p>Fajr</p>
+            <span id="fajr"></span>
         </div>
-        <div id="countdown"></div> <!-- Compte à rebours pour la prochaine prière -->
-    </div>
+        <div>
+            <p>Dhuhr</p>
+            <span id="dhuhr"></span>
+        </div>
+        <div>
+            <p>Asr</p>
+            <span id="asr"></span>
+        </div>
+        <div>
+            <p>Maghrib</p>
+            <span id="maghrib"></span>
+        </div>
+        <div>
+            <p>Isha</p>
+            <span id="isha"></span>
+        </div>
+    </div> <!-- Heures de prière -->
+
+    <div id="countdown"></div> <!-- Compte à rebours -->
+
+    <section id="about">
+        <h2>About the Developer</h2>
+        <p>Created by <strong>Mansour Mehdi</strong></p>
+        <p>Developer | IT Specialist | Web Enthusiast</p>
+        <p>For more projects, visit my <a href="https://github.com/Mansourtheonly">GitHub</a> or check out my <a href="https://yourportfolio.link">Portfolio</a>.</p>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Mansour Mehdi. All Rights Reserved.</p>
+    </footer>
+
     <script src="script.js"></script>
 </body>
 </html>

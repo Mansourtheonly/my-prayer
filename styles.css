@@ -1,68 +1,88 @@
-/* Global Styles */
+/* General Body Styling */
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: Arial, sans-serif;
+    font-size: 24px;
+    text-align: center;
     margin: 0;
     padding: 0;
-    background-color: #1D2D47;
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    background: linear-gradient(to bottom, #1D2D47, #0E1A2F);
+    color: #FFF;
 }
 
-#container {
-    text-align: center;
-    width: 100%;
-    max-width: 800px;
-    margin: auto;
+/* Header Styling */
+header {
+    background-color: #3A506B;
     padding: 20px;
+    font-size: 2rem;
+    color: #F4D160;
 }
 
-/* Clock Style */
-#clock {
-    color: #61FF7C;
-    font-size: 80px;
-    margin-bottom: 20px;
-    font-family: 'ds-digital', sans-serif;
-    text-shadow: 0 0 10px rgba(97, 255, 124, 0.5);
-}
-
-/* Prayer Times Grid */
-.prayer-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    text-align: center;
-}
-
-.prayer-container p {
+header p {
     color: #60D9F8;
+    font-size: 1.2rem;
+}
+
+/* Prayer Times Grid Styling */
+#prayer-times {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 30px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+    margin: 20px;
+    font-size: 2rem;
+}
+
+#prayer-times p {
+    margin: 0;
     font-size: 1.5rem;
-    background-color: #2C3E50;
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.5);
+    color: #ffba08;
 }
 
-/* Countdown Style */
+#prayer-times span {
+    display: block;
+    margin-top: 10px;
+    color: #60D9F8;
+    font-size: 2rem;
+}
+
+/* Centered Clock Styling */
+.center {
+    color: #61ff7c;
+    font-size: 80px;
+    font-family: 'ds-digital';
+    text-shadow: 2px 2px 5px #61ff7c;
+}
+
+/* Countdown Styling */
 #countdown {
-    color: #5699FF;
-    margin-top: 20px;
-    font-size: 1.8rem;
+    color: #ffba08;
+    font-size: 2rem;
+    margin: 30px 0;
 }
 
-/* Responsive Design */
-@media screen and (max-width: 768px) {
-    #clock {
-        font-size: 50px;
-    }
-    
-    .prayer-container {
-        grid-template-columns: 1fr;
-    }
+/* About Section Styling */
+#about {
+    background-color: #3A506B;
+    padding: 40px;
+    color: #F4D160;
+}
 
-    .prayer-container p {
-        font-size: 1.2rem;
-    }
+#about a {
+    color: #60D9F8;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+#about a:hover {
+    text-decoration: underline;
+}
+
+/* Footer Styling */
+footer {
+    background-color: #0E1A2F;
+    padding: 20px;
+    font-size: 1.2rem;
+    color: #FFF;
 }
