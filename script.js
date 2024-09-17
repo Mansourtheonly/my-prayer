@@ -1,134 +1,113 @@
 window.onload = function() {
-    // Fonction pour récupérer et afficher les heures de prière
-    function fetchPrayerTimes() {
-        fetch('heureprier.txt?' + new Date().getTime()) // Ajouter un paramètre de requête pour éviter le cache
-        .then(response => response.text())
+    // Get user location (Geolocation API)
+    navigator.geolocation.getCurrentPosition(function(position) {
+        let latitude = position.coords.latitude;
+        let longitude = position.coords.longitude;
+        
+        // Fetch prayer times from Aladhan API
+        fetch(`https://api.aladhan.com/v1/timings?latitude=${latitude}&longitude=${longitude}&method=2`)
+        .then(response => response.json())
         .then(data => {
-            const lines = data.split('\n');
-            const currentDate = new Date().toLocaleDateString('fr-CA');
-            const today = lines.find(line => line.startsWith(currentDate));
+            let prayerTimes = data.data.timings;
             
-            if (today) {
-                const prayerTimes = today.split(';').slice(1);
-                const timesFormatted = prayerTimes.map(time => {
-                    const [hours, minutes] = time.split(':');
-                    return `${hours}:${minutes}`;
-                });
-                displayPrayerTimes(timesFormatted);
-                displayCountdown(timesFormatted);
-            } else {
-                displayError('Les heures de prière pour aujourd\'hui ne sont pas disponibles.');
+            // Display the prayer times
+            document.getElementById('fajr').innerText = prayerTimes.Fajr;
+            document.getElementById('dhuhr').innerText = prayerTimes.Dhuhr;
+            document.getElementById('asr').innerText = prayerTimes.Asr;
+            document.getElementById('maghrib').innerText = prayerTimes.Maghrib;
+            document.getElementById('isha').innerText = prayerTimes.Isha;
+
+            // Schedule notifications for each prayer
+            setupNotifications(prayerTimes);
+        });
+    }, function(error) {
+        console.error("Error fetching location: ", error);
+        displayError('Unable to fetch location or prayer times.');
+    });
+
+    // Notification permission
+    if (Notification.permission === "granted") {
+        // Already granted
+    } else if (Notification.permission !== "denied") {
+        Notification.requestPermission().then(permission => {
+            if (permission === "granted") {
+                console.log("Notifications enabled.");
             }
-        })
-        .catch(error => {
-            displayError('Une erreur s\'est produite lors de la récupération des données des heures de prière.');
-            console.error('Error:', error);
         });
     }
 
-    // Fonction pour afficher l'horloge
+    // Schedule notifications for each prayer time
+    function scheduleNotification(time, prayerName) {
+        let now = new Date();
+        let prayerTime = new Date(now.toDateString() + ' ' + time);
+
+        let timeDifference = prayerTime.getTime() - now.getTime();
+
+        if (timeDifference > 0) {
+            setTimeout(function() {
+                new Notification(`Time for ${prayerName} prayer!`);
+            }, timeDifference);
+        }
+    }
+
+    // Function to setup notifications for all prayers
+    function setupNotifications(prayerTimes) {
+        scheduleNotification(prayerTimes.Fajr, "Fajr");
+        scheduleNotification(prayerTimes.Dhuhr, "Dhuhr");
+        scheduleNotification(prayerTimes.Asr, "Asr");
+        scheduleNotification(prayerTimes.Maghrib, "Maghrib");
+        scheduleNotification(prayerTimes.Isha, "Isha");
+    }
+
+    // Display clock function
     function displayClock() {
         const now = new Date();
         const clockDiv = document.getElementById('clock');
-        clockDiv.innerHTML = now.toLocaleTimeString('fr-FR', {hour12: false}) + '<br>' + now.toLocaleDateString('fr-FR');
+        clockDiv.innerHTML = now.toLocaleTimeString('fr-FR', { hour12: false }) + '<br>' + now.toLocaleDateString('fr-FR');
     }
 
-    // Fonction pour afficher les heures de prière
-    function displayPrayerTimes(times) {
-        const prayerTimesDiv = document.getElementById('prayer-times');
-        const prayers = ['الفجر', 'الشروق', 'الظهر', 'العصر', 'المغرب', 'العشاء'];
-        prayers.forEach((prayer, index) => {
-            const p = document.createElement('p');
-            p.innerHTML = `${prayer}: ${times[index]}`;
-            prayerTimesDiv.appendChild(p);
-        });
-    }
-
-    // Fonction pour afficher les erreurs
+    // Display error function
     function displayError(message) {
         const prayerTimesDiv = document.getElementById('prayer-times');
         prayerTimesDiv.innerHTML = `<p>${message}</p>`;
     }
 
-    // Fonction pour afficher le compte à rebours pour la prochaine prière
-    function displayCountdown(times) {
+    // Display countdown for the next prayer
+    function displayCountdown(prayerTimes) {
         const updateCountdown = () => {
             const now = new Date();
-            const currentTime = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds(); // Convertir l'heure actuelle en secondes
+            const currentTime = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds(); // Convert current time to seconds
 
-            // Trouver l'index de la prochaine prière
+            // Find the index of the next prayer
             let nextPrayerIndex = 0;
+            const prayerOrder = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+            const times = [prayerTimes.Fajr, prayerTimes.Dhuhr, prayerTimes.Asr, prayerTimes.Maghrib, prayerTimes.Isha];
+
             for (let i = 0; i < times.length; i++) {
                 const [hours, minutes] = times[i].split(':');
-                const prayerTime = parseInt(hours) * 3600 + parseInt(minutes) * 60; // Convertir l'heure de la prière en secondes
+                const prayerTime = parseInt(hours) * 3600 + parseInt(minutes) * 60; // Convert prayer time to seconds
                 if (prayerTime > currentTime) {
                     nextPrayerIndex = i;
                     break;
                 }
             }
 
-            // Calculer le temps restant jusqu'à la prochaine prière
             const [nextHours, nextMinutes] = times[nextPrayerIndex].split(':');
-            const nextPrayerTime = parseInt(nextHours) * 3600 + parseInt(nextMinutes) * 60; // Convertir l'heure de la prochaine prière en secondes
+            const nextPrayerTime = parseInt(nextHours) * 3600 + parseInt(nextMinutes) * 60; // Convert next prayer time to seconds
             const timeDiff = nextPrayerTime - currentTime;
             const hoursLeft = Math.floor(timeDiff / 3600);
             const minutesLeft = Math.floor((timeDiff % 3600) / 60);
             const secondsLeft = timeDiff % 60;
 
-            // Afficher le compte à rebours
             const countdownDiv = document.getElementById('countdown');
-            const nextPrayerName = ['الفجر', 'الشروق', 'الظهر', 'العصر', 'المغرب', 'العشاء'] [nextPrayerIndex];
-            countdownDiv.innerHTML = `<h2>الصلاة التالية   (${nextPrayerName})</h2><p>  ${secondsLeft} ,  ${minutesLeft} ,  ${hoursLeft}   </p>`;
-
-            // Afficher une fenêtre popup en plein écran et afficher un compte à rebours
-            if ((nextPrayerName === 'Maghrib' || nextPrayerName === 'Isha') && hoursLeft === 0 && minutesLeft === 5 && secondsLeft === 0) {
-                const fullscreenDiv = document.createElement('div');
-                fullscreenDiv.style.position = 'fixed';
-                fullscreenDiv.style.top = 0;
-                fullscreenDiv.style.left = 0;
-                fullscreenDiv.style.width = '100%';
-                fullscreenDiv.style.height = '100%';
-                fullscreenDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-                fullscreenDiv.style.color = 'white';
-                fullscreenDiv.style.display = 'flex';
-                fullscreenDiv.style.alignItems = 'center';
-                fullscreenDiv.style.justifyContent = 'center';
-                fullscreenDiv.style.fontSize = '2em';
-                fullscreenDiv.innerHTML = `<p>Il reste 5 minutes avant la prière de ${nextPrayerName} !</p>`;
-                document.body.appendChild(fullscreenDiv);
-
-                // Définir le nouveau compte à rebours dans la fenêtre popup
-                const countdownPopupDiv = document.createElement('div');
-                countdownPopupDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-                countdownPopupDiv.style.position = 'absolute';
-                countdownPopupDiv.style.bottom = '10px';
-                countdownPopupDiv.style.width = '100%';
-                countdownPopupDiv.style.textAlign = 'center';
-                countdownPopupDiv.innerHTML = 'Nouveau compte à rebours pendant 5 minutes';
-                fullscreenDiv.appendChild(countdownPopupDiv);
-
-                // Compte à rebours pour la fenêtre popup pendant 5 minutes
-                let countdownTimer = 300; // 5 minutes en secondes
-                const updatePopupCountdown = () => {
-                    countdownTimer--;
-                    if (countdownTimer >= 0) {
-                        countdownPopupDiv.innerHTML = `Compte à rebours: ${Math.floor(countdownTimer / 60)}:${countdownTimer % 60}`;
-                    } else {
-                        document.body.removeChild(fullscreenDiv); // Fermer la fenêtre popup
-                    }
-                };
-                setInterval(updatePopupCountdown, 1000); // Actualiser le compte à rebours toutes les secondes
-            }
+            const nextPrayerName = prayerOrder[nextPrayerIndex];
+            countdownDiv.innerHTML = `<h2>Next Prayer (${nextPrayerName})</h2><p> ${hoursLeft} hours, ${minutesLeft} minutes, ${secondsLeft} seconds left </p>`;
         };
 
-        // Actualiser le compte à rebours toutes les secondes
         updateCountdown();
-        setInterval(updateCountdown, 1000);
+        setInterval(updateCountdown, 1000); // Update countdown every second
     }
 
-    // Appeler la fonction pour récupérer et afficher les heures de prière au chargement initial
-    fetchPrayerTimes();
-
-    // Appeler la fonction pour afficher l'horloge à intervalles réguliers
+    // Call displayClock to show the clock at intervals
     setInterval(displayClock, 1000);
 };

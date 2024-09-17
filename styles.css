@@ -1,34 +1,68 @@
+/* Global Styles */
 body {
-    font-family: Arial, sans-serif;
-    font-size: 24px;
-    text-align: center;
-    margin-top: 100px;
+    font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
-    background: #1D2D47;
+    background-color: #1D2D47;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
-#prayer-times {
+#container {
+    text-align: center;
+    width: 100%;
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* Clock Style */
+#clock {
+    color: #61FF7C;
+    font-size: 80px;
+    margin-bottom: 20px;
+    font-family: 'ds-digital', sans-serif;
+    text-shadow: 0 0 10px rgba(97, 255, 124, 0.5);
+}
+
+/* Prayer Times Grid */
+.prayer-container {
     display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    text-align: center;
+}
+
+.prayer-container p {
     color: #60D9F8;
-    font-size: 4rem;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 30px;
-    padding: 5px;
+    font-size: 1.5rem;
+    background-color: #2C3E50;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.5);
 }
 
-.center {
-    color: #61ff7c;
-    text-align: center;
-    font-size: 100px;
-    font-family: ds-digital;
-    text-shadow: #61ff7c;
-}
-
+/* Countdown Style */
 #countdown {
-    color: #5699ff;
-    text-align: center;
-    font-size: 20px
-
+    color: #5699FF;
+    margin-top: 20px;
+    font-size: 1.8rem;
 }
 
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    #clock {
+        font-size: 50px;
+    }
+    
+    .prayer-container {
+        grid-template-columns: 1fr;
+    }
+
+    .prayer-container p {
+        font-size: 1.2rem;
+    }
+}

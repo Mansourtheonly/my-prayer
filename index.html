@@ -5,11 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Heures de Prière</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="clock" class="center"></div> <!-- Ajout de la div pour l'horloge -->
-    <div id="prayer-times"></div>
-    <div id="countdown"></div> <!-- Ajout de la div pour le compte à rebours -->
+    <div id="container">
+        <div id="clock" class="center"></div> <!-- Horloge centrale -->
+        <div id="prayer-times" class="prayer-container">
+            <p>Fajr: <span id="fajr"></span></p>
+            <p>Dhuhr: <span id="dhuhr"></span></p>
+            <p>Asr: <span id="asr"></span></p>
+            <p>Maghrib: <span id="maghrib"></span></p>
+            <p>Isha: <span id="isha"></span></p>
+        </div>
+        <div id="countdown"></div> <!-- Compte à rebours pour la prochaine prière -->
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
