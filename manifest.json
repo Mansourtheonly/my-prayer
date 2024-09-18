@@ -6,6 +6,7 @@
     "display": "standalone",
     "background_color": "#1D2D47",
     "theme_color": "#3A506B",
+    "orientation": "any",  <!-- Allow both portrait and landscape for desktop -->
     "icons": [
        {
           "src": "/icons/icon-192x192.png",

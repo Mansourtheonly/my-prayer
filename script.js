@@ -111,7 +111,7 @@ window.onload = function() {
     // Call displayClock to show the clock at intervals
     setInterval(displayClock, 1000);
     document.getElementById("year").innerHTML = new Date().getFullYear();
-    
+
    if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("/service-worker.js")
          .then(function(registration) {
@@ -121,6 +121,14 @@ window.onload = function() {
             console.error("Service Worker registration failed:", error);
          });
    }
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowDown') {
+        window.scrollBy(0, 100);
+    }
+    if (e.key === 'ArrowUp') {
+        window.scrollBy(0, -100);
+    }
+});
 
 };
 
