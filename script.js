@@ -36,19 +36,36 @@ if (Notification.permission === "granted") {
     });
 }
 
-    // Schedule notifications for each prayer time
-    function scheduleNotification(time, prayerName) {
-        let now = new Date();
-        let prayerTime = new Date(now.toDateString() + ' ' + time);
+function showNotification(prayerName) {
+    const title = "حان وقت صلاة حسب توقيت منطقتكم";
+    const options = {
+        body: `قَالَ رسُولُ اللَّهِ ﷺ: مثَلُ الصَّلواتِ الخَمْسِ كمثَلِ نهْرٍ جارٍ غمْرٍ عَلى بَابِ أَحَدِكُم يغْتَسِلُ مِنْهُ كُلَّ يَوْمٍ خمْسَ مرَّاتٍ رواه مسلم`,
+        icon: 'https://example.com/icon.png' // You can add an icon here
+    };
 
-        let timeDifference = prayerTime.getTime() - now.getTime();
+    let notification = new Notification(title, options);
 
-        if (timeDifference > 0) {
-            setTimeout(function() {
-                new Notification(`Time for ${prayerName} prayer!`);
-            }, timeDifference);
+    notification.onclick = function() {
+        if (confirm("هل تريد إيقاف جميع التنبيهات لهذا الوقت؟")) {
+            stopAudio();
+            notification.close();
+            alert("اول عمل يحاسب عليه عبد في اخرته هو صلاة");
         }
+    };
+}
+function scheduleNotification(time, prayerName) {
+    let now = new Date();
+    let prayerTime = new Date(now.toDateString() + ' ' + time);
+
+    let timeDifference = prayerTime.getTime() - now.getTime();
+
+    if (timeDifference > 0) {
+        setTimeout(function() {
+            new Notification(`Time for ${prayerName} prayer!`);
+            playAudio(); // Play the audio alert
+        }, timeDifference);
     }
+}
 
     // Function to setup notifications for all prayers
     function setupNotifications(prayerTimes) {
@@ -138,19 +155,7 @@ function playAudio() {
     audio.play();
 }
 
-function scheduleNotification(time, prayerName) {
-    let now = new Date();
-    let prayerTime = new Date(now.toDateString() + ' ' + time);
 
-    let timeDifference = prayerTime.getTime() - now.getTime();
-
-    if (timeDifference > 0) {
-        setTimeout(function() {
-            new Notification(`Time for ${prayerName} prayer!`);
-            playAudio(); // Play the audio alert
-        }, timeDifference);
-    }
-}
 
 function displayPrayerTimes(times) {
     const prayerTimesDiv = document.getElementById('prayer-times');
