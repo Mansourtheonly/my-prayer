@@ -25,16 +25,16 @@ window.onload = function() {
         displayError('Unable to fetch location or prayer times.');
     });
 
-    // Notification permission
-    if (Notification.permission === "granted") {
-        // Already granted
-    } else if (Notification.permission !== "denied") {
-        Notification.requestPermission().then(permission => {
-            if (permission === "granted") {
-                console.log("Notifications enabled.");
-            }
-        });
-    }
+// Request notification permission
+if (Notification.permission === "granted") {
+    // Permission already granted
+} else if (Notification.permission !== "denied") {
+    Notification.requestPermission().then(permission => {
+        if (permission === "granted") {
+            console.log("Notifications enabled.");
+        }
+    });
+}
 
     // Schedule notifications for each prayer time
     function scheduleNotification(time, prayerName) {
@@ -54,10 +54,11 @@ window.onload = function() {
     function setupNotifications(prayerTimes) {
         scheduleNotification(prayerTimes.Fajr, "Fajr");
         scheduleNotification(prayerTimes.Dhuhr, "Dhuhr");
-        scheduleNotification(prayerTimes.Asr, "Asr");
+        scheduleNotiffication(prayerTimes.Asr, "Asr");
         scheduleNotification(prayerTimes.Maghrib, "Maghrib");
         scheduleNotification(prayerTimes.Isha, "Isha");
     }
+    
 
     // Display clock function
     function displayClock() {
@@ -129,6 +130,48 @@ document.addEventListener('keydown', function(e) {
         window.scrollBy(0, -100);
     }
 });
+
+
+const audio = new Audio('https://media.sd.ma/assabile/adhan_3435370/0bf83c80b583.mp3');
+
+function playAudio() {
+    audio.play();
+}
+
+function scheduleNotification(time, prayerName) {
+    let now = new Date();
+    let prayerTime = new Date(now.toDateString() + ' ' + time);
+
+    let timeDifference = prayerTime.getTime() - now.getTime();
+
+    if (timeDifference > 0) {
+        setTimeout(function() {
+            new Notification(`Time for ${prayerName} prayer!`);
+            playAudio(); // Play the audio alert
+        }, timeDifference);
+    }
+}
+
+function displayPrayerTimes(times) {
+    const prayerTimesDiv = document.getElementById('prayer-times');
+    const prayers = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+    prayers.forEach((prayer, index) => {
+        const p = document.createElement('p');
+        p.innerHTML = `${prayer}: ${times[index]}`;
+        prayerTimesDiv.appendChild(p);
+    });
+
+    // Set up notifications after displaying prayer times
+    setupNotifications({
+        Fajr: times[0],
+        Dhuhr: times[1],
+        Asr: times[2],
+        Maghrib: times[3],
+        Isha: times[4]
+    });
+}
+
+
 
 };
 
