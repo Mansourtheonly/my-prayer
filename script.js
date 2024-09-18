@@ -111,5 +111,16 @@ window.onload = function() {
     // Call displayClock to show the clock at intervals
     setInterval(displayClock, 1000);
     document.getElementById("year").innerHTML = new Date().getFullYear();
+    
+   if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/service-worker.js")
+         .then(function(registration) {
+            console.log("Service Worker registered with scope:", registration.scope);
+         })
+         .catch(function(error) {
+            console.error("Service Worker registration failed:", error);
+         });
+   }
 
 };
+
